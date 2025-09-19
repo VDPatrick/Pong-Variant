@@ -19,7 +19,6 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 func _ready() -> void:
 	rng.randomize()
 	_apply_texture_if_any()
-	reset_ball(true)
 
 func reset_ball(randomize_direction: bool = true) -> void:
 	# Center on current viewport (works even if you later change the window size)
@@ -68,3 +67,7 @@ func _apply_texture_if_any() -> void:
 			# Use the smaller side so the circle fits entirely within the texture
 			var d: float = min(tex_size.x, tex_size.y)
 			circle_shape.radius = d * 0.5
+
+func center_ball() -> void:
+	global_position = get_viewport_rect().size * 0.5
+	velocity = Vector2.ZERO

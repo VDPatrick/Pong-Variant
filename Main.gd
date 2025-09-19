@@ -1,6 +1,8 @@
 extends Node2D
 
-enum GameState { MENU, PLAYING, END }
+@export var video_stream: VideoStream
+
+enum GameState { MENU, PLAYING, END, VIDEO, COUNTDOWN }
 
 var state: int = GameState.MENU
 var has_active_match: bool = false
@@ -27,12 +29,22 @@ var points_to_win: int = 5
 @onready var sfx_wall: AudioStreamPlayer2D = $SfxWall
 @onready var sfx_goal: AudioStreamPlayer2D = $SfxGoal
 
+@onready var video_screen: Control = $CanvasLayer/VideoScreen
+
+@onready var countdown_label: Label = $CanvasLayer/Countdown
+
 # Remember starting positions so Reset can restore them
 var start_ball_pos: Vector2
 var start_left_pos: Vector2
 var start_right_pos: Vector2
 
 func _ready() -> void:
+	ball.center_ball()   # or the force-center snippet from Option A
+	await get_tree().process_frame
+	start_ball_pos  = ball.global_position
+	start_left_pos  = paddle_left.global_position
+	start_right_pos = paddle_right.global_position
+	
 	# Capture initial transforms for a clean reset later
 	await get_tree().process_frame
 	start_ball_pos  = ball.global_position
@@ -72,6 +84,12 @@ func _ready() -> void:
 		music.play()
 
 	_enter_menu()
+	
+	if video_screen.has_signal("exit_requested"):
+		video_screen.connect("exit_requested", Callable(self, "_on_video_exit"))
+	
+	if video_screen.has_signal("playback_finished"):
+		video_screen.connect("playback_finished", Callable(self, "_on_video_finished"))
 
 func _process(_delta: float) -> void:
 	if state == GameState.PLAYING and Input.is_action_just_pressed("back"):
@@ -124,6 +142,8 @@ func _return_to_menu_initial() -> void:
 	if end_screen and end_screen.has_method("hide_screen"):
 		end_screen.call("hide_screen")
 
+	has_active_match = false
+	
 	# Hard reset positions and scores
 	score_left = 0
 	score_right = 0
@@ -147,7 +167,8 @@ func _enter_menu() -> void:
 	state = GameState.MENU
 	_set_game_active(false)   # freeze paddles + ball in place
 	menu.visible = true
-	score_ui.visible = false
+	if music.stream and not music.playing:
+		music.play()
 	if settings_panel and settings_panel.has_method("close"):
 		settings_panel.call("close")
 	if end_screen and end_screen.has_method("hide_screen"):
@@ -156,21 +177,33 @@ func _enter_menu() -> void:
 		menu.call("set_play_label", ("Resume" if has_active_match else "Play Game"))
 
 func _start_game() -> void:
-	state = GameState.PLAYING
+	# Hide menu, show score UI
 	menu.visible = false
 	score_ui.visible = true
-	_set_game_active(true)
 
+	# If resuming an active match, skip countdown
 	if has_active_match:
-		# Resume existing match—do not reset scores or ball.
+		state = GameState.PLAYING
+		_set_game_active(true)
 		return
 
-	# Fresh match
+	# New match: reset scores and positions, freeze gameplay, then run countdown
+	state = GameState.COUNTDOWN
 	score_left = 0
 	score_right = 0
 	_update_score()
-	ball.reset_ball(true)
-	has_active_match = true
+
+	# Reset positions to the saved starting transforms
+	ball.global_position = start_ball_pos
+	ball.velocity = Vector2.ZERO
+	paddle_left.global_position = start_left_pos
+	paddle_right.global_position = start_right_pos
+
+	_set_game_active(false)  # freeze paddles + ball during countdown
+
+	# Fire the countdown coroutine
+	_do_countdown(3)
+
 
 func _set_game_active(active: bool) -> void:
 	ball.set_physics_process(active)
@@ -214,7 +247,44 @@ func _on_settings_back() -> void:
 	menu.visible = true
 
 func _on_menu_video() -> void:
-	print("Play Video selected (TODO)")
+	# Enter a dedicated video state (or reuse MENU/PLAYING if you prefer)
+	state = GameState.VIDEO  # or a VIDEO state if you have one
+	_set_game_active(false)
+
+	# Hide UI
+	menu.visible = false
+	score_ui.visible = false
+	if settings_panel and settings_panel.has_method("close"):
+		settings_panel.call("close")
+	if end_screen and end_screen.has_method("hide_screen"):
+		end_screen.call("hide_screen")
+
+	# Stop menu music during playback
+	if music.playing:
+		music.stop()
+
+	# Resolve a stream: exported var OR the VideoStreamPlayer's current stream
+	var stream: VideoStream = null
+	if Engine.is_editor_hint():
+		# (optional: avoid editor null spam)
+		pass
+	if video_stream != null:
+		stream = video_stream
+	else:
+		var player := $CanvasLayer/VideoScreen/Video as VideoStreamPlayer
+		if player and player.stream != null:
+			stream = player.stream
+
+	# Play (or bail gracefully)
+	if stream != null and video_screen and video_screen.has_method("play"):
+		video_screen.call("play", stream)
+	else:
+		push_warning("No video stream found. Assign Main.video_stream or set the VideoStreamPlayer's Stream.")
+		# Return to menu and resume music so you're not stuck
+		_enter_menu()
+		if music.stream and not music.playing:
+			music.play()
+
 
 # --- Ball SFX ---
 
@@ -225,3 +295,29 @@ func _on_ball_paddle_hit() -> void:
 func _on_ball_wall_hit() -> void:
 	if state == GameState.PLAYING:
 		sfx_wall.play()
+
+func _on_video_exit() -> void:
+	# Stop video overlay & return to initial menu
+	if video_screen and video_screen.has_method("stop_and_hide"):
+		video_screen.call("stop_and_hide")
+	_return_to_menu_initial()
+	# Ensure menu music resumes at the menu
+	if music.stream and not music.playing:
+		music.play()
+
+func _on_video_finished() -> void:
+	# Same behavior as cancel: return to initial menu
+	_on_video_exit()
+
+func _do_countdown(seconds: int) -> void:
+	countdown_label.visible = true
+	for i: int in range(seconds, 0, -1):
+		countdown_label.text = str(i)
+		await get_tree().create_timer(1.0).timeout
+	countdown_label.visible = false
+
+	# Start actual play
+	has_active_match = true
+	state = GameState.PLAYING
+	_set_game_active(true)
+	ball.reset_ball(true)

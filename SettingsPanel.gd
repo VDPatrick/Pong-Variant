@@ -5,6 +5,7 @@ signal points_to_win_changed(value: int)
 
 @onready var rows: Array[HBoxContainer] = [
 	$VBox/MasterRow,
+	$VBox/VideoRow,
 	$VBox/MusicRow,
 	$VBox/SfxRow,
 	$VBox/PointsRow
@@ -25,6 +26,10 @@ signal points_to_win_changed(value: int)
 @onready var sfx_value:    Label = $VBox/SfxRow/Value
 @onready var points_value: Label = $VBox/PointsRow/Value
 
+@onready var video_slider: HSlider = $VBox/VideoRow/Slider
+@onready var video_name:   Label   = $VBox/VideoRow/Name
+@onready var video_value:  Label   = $VBox/VideoRow/Value
+
 var index: int = 0
 var _points_to_win: int = 5
 
@@ -33,6 +38,7 @@ func _ready() -> void:
 	_init_from_buses()
 	# hook up sliders
 	master_slider.value_changed.connect(func(v: float) -> void: _apply_bus("Master", v))
+	video_slider.value_changed.connect(func(v: float) -> void: _apply_bus("Video", v))
 	music_slider.value_changed.connect(func(v: float) -> void: _apply_bus("Music", v))
 	sfx_slider.value_changed.connect(func(v: float) -> void: _apply_bus("SFX", v))
 	points_slider.value_changed.connect(func(v: float) -> void:
@@ -80,6 +86,7 @@ func _nudge(delta_value: float) -> void:
 
 func _init_from_buses() -> void:
 	_set_slider_from_bus(master_slider, "Master")
+	_set_slider_from_bus(video_slider, "Video")
 	_set_slider_from_bus(music_slider, "Music")
 	_set_slider_from_bus(sfx_slider, "SFX")
 	_update_value_labels()
@@ -103,11 +110,12 @@ func _apply_bus(bus_name: String, percent: float) -> void:
 
 func _update_value_labels() -> void:
 	master_value.text = str(int(master_slider.value)) + "%"
+	video_value.text = str(int(video_slider.value)) + "%"
 	music_value.text  = str(int(music_slider.value)) + "%"
 	sfx_value.text    = str(int(sfx_slider.value)) + "%"
 
 func _update_visuals() -> void:
-	var names: Array[Label] = [master_name, music_name, sfx_name, points_name]
+	var names: Array[Label] = [master_name, video_name, music_name, sfx_name, points_name]
 	for i in names.size():
 		var selected: bool = (i == index)
 		var lbl: Label = names[i]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://o7xgpnv1h1ck"]
+[gd_scene load_steps=27 format=3 uid="uid://o7xgpnv1h1ck"]
 
 [ext_resource type="Script" uid="uid://ditlv007yl2cn" path="res://Main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dglv4lmt5rol8" path="res://Ball.gd" id="2_cm0pq"]
@@ -14,7 +14,9 @@
 [ext_resource type="AudioStream" uid="uid://sbi4ar2ajb3y" path="res://select.wav" id="11_20pc6"]
 [ext_resource type="AudioStream" uid="uid://ckqm1520xteed" path="res://background-placeholder.mp3" id="11_c6i3y"]
 [ext_resource type="Script" uid="uid://nfkkfmq0qhun" path="res://EndScreen.gd" id="11_j4qnp"]
+[ext_resource type="Script" uid="uid://dpa0u1rngi5ty" path="res://VideoScreen.gd" id="12_fpfj3"]
 [ext_resource type="AudioStream" uid="uid://cgxhkxsw078e3" path="res://cheer-placeholder.wav" id="13_c6i3y"]
+[ext_resource type="VideoStream" uid="uid://unqv162w566f" path="res://video-placeholder-edit.ogv" id="13_sc1dx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3dxm6"]
 radius = 8.0
@@ -135,34 +137,47 @@ texture = ExtResource("8_trn2v")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Score" type="HBoxContainer" parent="CanvasLayer"]
-offset_left = 341.0
-offset_top = 25.0
-offset_right = 383.0
-offset_bottom = 75.0
-theme_override_constants/separation = 40
+custom_minimum_size = Vector2(0, 100)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -61.0
+offset_right = 61.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_constants/separation = 30
 alignment = 1
 
 [node name="Left" type="Label" parent="CanvasLayer/Score"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
+text = "0"
+
+[node name="Dash" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "-"
 
 [node name="Right" type="Label" parent="CanvasLayer/Score"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
+text = "0"
 
 [node name="Menu" type="Control" parent="CanvasLayer"]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 295.0
-offset_top = 182.0
-offset_right = 382.0
-offset_bottom = 266.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("9_03owx")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu"]
+custom_minimum_size = Vector2(750, 0)
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_top = 134.0
+offset_right = 768.0
+offset_bottom = 370.0
 theme_override_constants/separation = 12
 alignment = 1
 
@@ -170,21 +185,26 @@ alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Play Game"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Reset" type="Label" parent="CanvasLayer/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Reset"
+horizontal_alignment = 1
 
 [node name="Settings" type="Label" parent="CanvasLayer/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Settings"
+horizontal_alignment = 1
 
 [node name="Video" type="Label" parent="CanvasLayer/Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Play Video"
+horizontal_alignment = 1
 
 [node name="SettingsPanel" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -192,9 +212,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 125.0
-offset_top = 125.0
+offset_top = 209.0
 offset_right = -123.0
-offset_bottom = -123.0
+offset_bottom = -259.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("10_c2ibq")
@@ -221,6 +241,25 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MasterRow"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+
+[node name="VideoRow" type="HBoxContainer" parent="CanvasLayer/SettingsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Name" type="Label" parent="CanvasLayer/SettingsPanel/VBox/VideoRow"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Video Volume"
+
+[node name="Slider" type="HSlider" parent="CanvasLayer/SettingsPanel/VBox/VideoRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/VideoRow"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "100%"
@@ -263,6 +302,9 @@ size_flags_vertical = 4
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "100%"
+
+[node name="Spacing" type="Label" parent="CanvasLayer/SettingsPanel/VBox"]
+layout_mode = 2
 
 [node name="PointsRow" type="HBoxContainer" parent="CanvasLayer/SettingsPanel/VBox"]
 layout_mode = 2
@@ -314,6 +356,41 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
 text = "Press Confirm to return to menu"
+
+[node name="VideoScreen" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_fpfj3")
+
+[node name="Video" type="VideoStreamPlayer" parent="CanvasLayer/VideoScreen"]
+custom_minimum_size = Vector2(768, 768)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("13_sc1dx")
+expand = true
+loop = true
+bus = &"Video"
+
+[node name="Hint" type="Label" parent="CanvasLayer/VideoScreen"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Hold for 3 seconds to cancel video"
+
+[node name="Countdown" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(768, 500)
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 70
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -100
