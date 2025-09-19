@@ -33,6 +33,8 @@ var points_to_win: int = 5
 
 @onready var countdown_label: Label = $CanvasLayer/Countdown
 
+@onready var controls_ui: Control   = $CanvasLayer/ControlsInfo
+
 # Remember starting positions so Reset can restore them
 var start_ball_pos: Vector2
 var start_left_pos: Vector2
@@ -131,7 +133,7 @@ func _end_game(winner: int) -> void:
 	state = GameState.END
 	has_active_match = false
 	_set_game_active(false)
-	score_ui.visible = false
+	_set_hud_visible(false)
 	menu.visible = false
 	if end_screen and end_screen.has_method("show_winner"):
 		var text: String = ("Player 1 wins!" if winner == 1 else "Player 2 wins!")
@@ -167,6 +169,7 @@ func _enter_menu() -> void:
 	state = GameState.MENU
 	_set_game_active(false)   # freeze paddles + ball in place
 	menu.visible = true
+	_set_hud_visible(true)
 	if music.stream and not music.playing:
 		music.play()
 	if settings_panel and settings_panel.has_method("close"):
@@ -179,7 +182,7 @@ func _enter_menu() -> void:
 func _start_game() -> void:
 	# Hide menu, show score UI
 	menu.visible = false
-	score_ui.visible = true
+	_set_hud_visible(true)
 
 	# If resuming an active match, skip countdown
 	if has_active_match:
@@ -248,12 +251,12 @@ func _on_settings_back() -> void:
 
 func _on_menu_video() -> void:
 	# Enter a dedicated video state (or reuse MENU/PLAYING if you prefer)
-	state = GameState.VIDEO  # or a VIDEO state if you have one
+	state = GameState.VIDEO
 	_set_game_active(false)
 
 	# Hide UI
 	menu.visible = false
-	score_ui.visible = false
+	_set_hud_visible(false)
 	if settings_panel and settings_panel.has_method("close"):
 		settings_panel.call("close")
 	if end_screen and end_screen.has_method("hide_screen"):
@@ -321,3 +324,7 @@ func _do_countdown(seconds: int) -> void:
 	state = GameState.PLAYING
 	_set_game_active(true)
 	ball.reset_ball(true)
+
+func _set_hud_visible(v: bool) -> void:
+	score_ui.visible = v
+	controls_ui.visible = v

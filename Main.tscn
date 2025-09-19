@@ -392,6 +392,23 @@ theme_override_font_sizes/font_size = 70
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ControlsInfo" type="PanelContainer" parent="CanvasLayer"]
+z_index = 5
+offset_left = 8.0
+offset_top = 7.0
+offset_right = 193.0
+offset_bottom = 108.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ControlsInfo"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/ControlsInfo/MarginContainer"]
+layout_mode = 2
+text = " Move: W + S  | ↑ + ↓
+ Confirm: Enter / Space
+ Menu Sliders: A + D
+ Back: Esc  "
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -100
 texture_filter = 1
