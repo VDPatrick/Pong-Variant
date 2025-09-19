@@ -8,6 +8,9 @@ extends CharacterBody2D
 @export var ball_texture: Texture2D
 @export var auto_resize_shape: bool = true
 
+signal paddle_hit
+signal wall_hit
+
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -34,6 +37,7 @@ func _physics_process(delta: float) -> void:
 		var collider: Node2D = collision.get_collider() as Node2D
 		if collider and collider.is_in_group(&"paddle"):
 			# Angle bounce based on where the ball hit the paddle
+			emit_signal("paddle_hit")
 			var paddle_cs: CollisionShape2D = collider.get_node("CollisionShape2D") as CollisionShape2D
 			var rect: RectangleShape2D = paddle_cs.shape as RectangleShape2D
 			var half_h: float = rect.size.y * 0.5
@@ -46,6 +50,7 @@ func _physics_process(delta: float) -> void:
 			velocity = Vector2(new_dir_x, 0.0).rotated(bounce_ang).normalized() * new_speed
 		else:
 			# Top/bottom wall bounce
+			emit_signal("wall_hit")
 			velocity = velocity.bounce(collision.get_normal())
 
 		var remainder: Vector2 = collision.get_remainder()

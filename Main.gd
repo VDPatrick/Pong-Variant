@@ -18,6 +18,11 @@ var score_right: int = 0
 
 @onready var menu: Control = $CanvasLayer/Menu
 
+@onready var music: AudioStreamPlayer2D = $Music
+@onready var sfx_paddle: AudioStreamPlayer2D = $SfxPaddle
+@onready var sfx_wall: AudioStreamPlayer2D = $SfxWall
+@onready var sfx_goal: AudioStreamPlayer2D = $SfxGoal
+
 # Remember starting positions so "Reset Game" can restore them
 var start_ball_pos: Vector2
 var start_left_pos: Vector2
@@ -42,6 +47,13 @@ func _ready() -> void:
 	menu.video_selected.connect(_on_menu_video)
 
 	_enter_menu()
+	
+	ball.paddle_hit.connect(_on_ball_paddle_hit)
+	ball.wall_hit.connect(_on_ball_wall_hit)
+
+	# Start music once (keeps playing across menu/game)
+	if music.stream and not music.playing:
+		music.play()
 
 func _process(_delta: float) -> void:
 	if state == GameState.PLAYING and Input.is_action_just_pressed("back"):
@@ -51,12 +63,14 @@ func _on_goal_left(body: Node) -> void:
 	if body == ball and state == GameState.PLAYING:
 		score_right += 1
 		_update_score()
+		sfx_goal.play()
 		ball.reset_ball(true)
 
 func _on_goal_right(body: Node) -> void:
 	if body == ball and state == GameState.PLAYING:
 		score_left += 1
 		_update_score()
+		sfx_goal.play()
 		ball.reset_ball(true)
 
 func _update_score() -> void:
@@ -124,3 +138,11 @@ func _on_menu_options() -> void:
 
 func _on_menu_video() -> void:
 	print("Play Video selected (TODO)")
+
+func _on_ball_paddle_hit() -> void:
+	if state == GameState.PLAYING:
+		sfx_paddle.play()
+
+func _on_ball_wall_hit() -> void:
+	if state == GameState.PLAYING:
+		sfx_wall.play()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://o7xgpnv1h1ck"]
+[gd_scene load_steps=23 format=3 uid="uid://o7xgpnv1h1ck"]
 
 [ext_resource type="Script" uid="uid://ditlv007yl2cn" path="res://Main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dglv4lmt5rol8" path="res://Ball.gd" id="2_cm0pq"]
@@ -10,6 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://d2aldougbakob" path="res://Goal-Placeholder.png" id="8_trn2v"]
 [ext_resource type="Script" uid="uid://rbfrn4ie5yqf" path="res://Menu.gd" id="9_03owx"]
 [ext_resource type="Texture2D" uid="uid://cgavlk1ncdjim" path="res://Grass-Placeholder.jpg" id="10_wkp8b"]
+[ext_resource type="AudioStream" uid="uid://sbi4ar2ajb3y" path="res://select.wav" id="11_20pc6"]
+[ext_resource type="AudioStream" uid="uid://ckqm1520xteed" path="res://background-placeholder.mp3" id="11_c6i3y"]
+[ext_resource type="AudioStream" uid="uid://cgxhkxsw078e3" path="res://cheer-placeholder.wav" id="13_c6i3y"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3dxm6"]
 radius = 8.0
@@ -130,17 +133,20 @@ texture = ExtResource("8_trn2v")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Score" type="HBoxContainer" parent="CanvasLayer"]
-offset_left = 365.0
+offset_left = 341.0
 offset_top = 25.0
-offset_right = 405.0
-offset_bottom = 65.0
+offset_right = 383.0
+offset_bottom = 75.0
+theme_override_constants/separation = 40
 alignment = 1
 
 [node name="Left" type="Label" parent="CanvasLayer/Score"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 36
 
 [node name="Right" type="Label" parent="CanvasLayer/Score"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 36
 
 [node name="Menu" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -183,3 +189,23 @@ z_index = -100
 texture_filter = 1
 position = Vector2(384, 384)
 texture = ExtResource("10_wkp8b")
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_c6i3y")
+bus = &"Music"
+parameters/looping = true
+
+[node name="SfxPaddle" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_20pc6")
+max_polyphony = 8
+bus = &"SFX"
+
+[node name="SfxWall" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_20pc6")
+max_polyphony = 8
+bus = &"SFX"
+
+[node name="SfxGoal" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_c6i3y")
+max_polyphony = 3
+bus = &"SFX"
