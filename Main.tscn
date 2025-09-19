@@ -1,10 +1,13 @@
-[gd_scene load_steps=15 format=3 uid="uid://o7xgpnv1h1ck"]
+[gd_scene load_steps=18 format=3 uid="uid://o7xgpnv1h1ck"]
 
 [ext_resource type="Script" uid="uid://ditlv007yl2cn" path="res://Main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dglv4lmt5rol8" path="res://Ball.gd" id="2_cm0pq"]
 [ext_resource type="Texture2D" uid="uid://cu3qhldfyly1o" path="res://Circle-White.png" id="3_3dxm6"]
 [ext_resource type="Script" uid="uid://cxyo8p00nqdhv" path="res://Paddle.gd" id="3_fos0i"]
 [ext_resource type="Texture2D" uid="uid://4p6wro1xjs8e" path="res://Paddle-Placeholder.png" id="4_cm0pq"]
+[ext_resource type="Texture2D" uid="uid://cayeuyooqchjy" path="res://Wall2-Placeholder.png" id="6_lgr22"]
+[ext_resource type="Texture2D" uid="uid://bgb2mxn057v0t" path="res://Wall1-Placeholder.png" id="7_trn2v"]
+[ext_resource type="Texture2D" uid="uid://d2aldougbakob" path="res://Goal-Placeholder.png" id="8_trn2v"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3dxm6"]
 radius = 8.0
@@ -40,21 +43,21 @@ script = ExtResource("1_r0du0")
 position = Vector2(384, 384)
 script = ExtResource("2_cm0pq")
 
-[node name="Sprite2D" type="Sprite2D" parent="Ball"]
-texture = ExtResource("3_3dxm6")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
 shape = SubResource("CircleShape2D_3dxm6")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Ball"]
+texture = ExtResource("3_3dxm6")
 
 [node name="PaddleLeft" type="CharacterBody2D" parent="."]
 position = Vector2(46, 384)
 script = ExtResource("3_fos0i")
 
-[node name="Sprite2D" type="Sprite2D" parent="PaddleLeft"]
-texture = ExtResource("4_cm0pq")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PaddleLeft"]
 shape = SubResource("RectangleShape2D_lgr22")
+
+[node name="Sprite2D" type="Sprite2D" parent="PaddleLeft"]
+texture = ExtResource("4_cm0pq")
 
 [node name="PaddleRight" type="CharacterBody2D" parent="."]
 position = Vector2(722, 384)
@@ -62,11 +65,11 @@ script = ExtResource("3_fos0i")
 up_action = &"p2_up"
 down_action = &"p2_down"
 
-[node name="Sprite2D" type="Sprite2D" parent="PaddleRight"]
-texture = ExtResource("4_cm0pq")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PaddleRight"]
 shape = SubResource("RectangleShape2D_trn2v")
+
+[node name="Sprite2D" type="Sprite2D" parent="PaddleRight"]
+texture = ExtResource("4_cm0pq")
 
 [node name="WallTop" type="StaticBody2D" parent="."]
 position = Vector2(384, 4)
@@ -74,11 +77,17 @@ position = Vector2(384, 4)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
 shape = SubResource("RectangleShape2D_03owx")
 
+[node name="Sprite2D" type="Sprite2D" parent="WallTop"]
+texture = ExtResource("6_lgr22")
+
 [node name="WallBottom" type="StaticBody2D" parent="."]
 position = Vector2(384, 764)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallBottom"]
 shape = SubResource("RectangleShape2D_wkp8b")
+
+[node name="Sprite2D" type="Sprite2D" parent="WallBottom"]
+texture = ExtResource("6_lgr22")
 
 [node name="WallLeft" type="StaticBody2D" parent="."]
 position = Vector2(4, 384)
@@ -86,11 +95,17 @@ position = Vector2(4, 384)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
 shape = SubResource("RectangleShape2D_r0du0")
 
+[node name="Sprite2D" type="Sprite2D" parent="WallLeft"]
+texture = ExtResource("7_trn2v")
+
 [node name="WallRight" type="StaticBody2D" parent="."]
 position = Vector2(764, 384)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
 shape = SubResource("RectangleShape2D_fos0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="WallRight"]
+texture = ExtResource("7_trn2v")
 
 [node name="GoalLeft" type="Area2D" parent="."]
 position = Vector2(8, 384)
@@ -98,11 +113,17 @@ position = Vector2(8, 384)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GoalLeft"]
 shape = SubResource("RectangleShape2D_20pc6")
 
+[node name="Sprite2D" type="Sprite2D" parent="GoalLeft"]
+texture = ExtResource("8_trn2v")
+
 [node name="GoalRight" type="Area2D" parent="."]
 position = Vector2(760, 384)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GoalRight"]
 shape = SubResource("RectangleShape2D_5vvyt")
+
+[node name="Sprite2D" type="Sprite2D" parent="GoalRight"]
+texture = ExtResource("8_trn2v")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
