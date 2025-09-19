@@ -23,6 +23,8 @@ var score_right: int = 0
 @onready var sfx_wall: AudioStreamPlayer2D = $SfxWall
 @onready var sfx_goal: AudioStreamPlayer2D = $SfxGoal
 
+@onready var settings_panel: Control = $CanvasLayer/SettingsPanel
+
 # Remember starting positions so "Reset Game" can restore them
 var start_ball_pos: Vector2
 var start_left_pos: Vector2
@@ -43,8 +45,10 @@ func _ready() -> void:
 	# Menu signals
 	menu.play_selected.connect(_on_menu_play)
 	menu.reset_selected.connect(_on_menu_reset)
-	menu.options_selected.connect(_on_menu_options)
+	menu.settings_selected.connect(_on_menu_settings)
 	menu.video_selected.connect(_on_menu_video)
+	
+	(settings_panel as Node).connect("back_requested", Callable(self, "_on_settings_back"))
 
 	_enter_menu()
 	
@@ -81,9 +85,10 @@ func _update_score() -> void:
 
 func _enter_menu() -> void:
 	state = GameState.MENU
-	_set_game_active(false)        # freeze paddles + ball in place
+	_set_game_active(false)        
 	menu.visible = true
 	score_ui.visible = false
+	settings_panel.call("close")
 	if menu.has_method("set_play_label"):
 		menu.call("set_play_label", ("Resume" if has_active_match else "Play Game"))
 
@@ -133,9 +138,6 @@ func _on_menu_reset() -> void:
 	# Ensure we're in MENU and label shows "Play Game"
 	_enter_menu()
 
-func _on_menu_options() -> void:
-	print("Options selected (TODO)")
-
 func _on_menu_video() -> void:
 	print("Play Video selected (TODO)")
 
@@ -146,3 +148,11 @@ func _on_ball_paddle_hit() -> void:
 func _on_ball_wall_hit() -> void:
 	if state == GameState.PLAYING:
 		sfx_wall.play()
+		
+func _on_menu_settings() -> void:
+	menu.visible = false
+	settings_panel.call("open")
+
+func _on_settings_back() -> void:
+	settings_panel.call("close")
+	menu.visible = true

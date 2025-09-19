@@ -210,14 +210,12 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Name" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MasterRow"]
-custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Master Volume"
 
 [node name="Slider" type="HSlider" parent="CanvasLayer/SettingsPanel/VBox/MasterRow"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MasterRow"]
 layout_mode = 2
@@ -227,15 +225,12 @@ text = "100%"
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Name" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MusicRow"]
-custom_minimum_size = Vector2(150, 0)
+[node name="Label" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MusicRow"]
 layout_mode = 2
 text = "Music Volume"
 
 [node name="Slider" type="HSlider" parent="CanvasLayer/SettingsPanel/VBox/MusicRow"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MusicRow"]
 layout_mode = 2
@@ -246,15 +241,11 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Name" type="Label" parent="CanvasLayer/SettingsPanel/VBox/SfxRow"]
-custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
 text = "SFX Volume"
 
 [node name="Slider" type="HSlider" parent="CanvasLayer/SettingsPanel/VBox/SfxRow"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/SfxRow"]
 layout_mode = 2

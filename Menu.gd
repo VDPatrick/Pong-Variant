@@ -2,14 +2,14 @@ extends Control
 
 signal play_selected
 signal reset_selected
-signal options_selected
+signal settings_selected
 signal video_selected
 
-@onready var play: Label    = $VBoxContainer/Play
-@onready var reset: Label   = $VBoxContainer/Reset
-@onready var options: Label = $VBoxContainer/Options
-@onready var video: Label   = $VBoxContainer/Video
-@onready var items: Array[Label] = [play, reset, options, video]
+@onready var play: Label     = $VBoxContainer/Play
+@onready var reset: Label    = $VBoxContainer/Reset
+@onready var settings: Label = $VBoxContainer/Settings
+@onready var video: Label    = $VBoxContainer/Video
+@onready var items: Array[Label] = [play, reset, settings, video]
 
 var index: int = 0
 
@@ -28,7 +28,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 		match index:
 			0: play_selected.emit()
 			1: reset_selected.emit()
-			2: options_selected.emit()
+			2: settings_selected.emit()
 			3: video_selected.emit()
 
 func _update_visuals() -> void:
@@ -38,6 +38,5 @@ func _update_visuals() -> void:
 		lbl.add_theme_color_override("font_color", Color(1, 1, 0) if selected else Color(1, 1, 1))
 		lbl.add_theme_font_size_override("font_size", 42 if selected else 36)
 
-# Called from Main.gd to change "Play Game" ↔ "Resume"
 func set_play_label(text: String) -> void:
 	play.text = text
