@@ -18,6 +18,8 @@ func _ready() -> void:
 	_update_visuals()
 
 func _unhandled_input(_event: InputEvent) -> void:
+	if not visible:
+		return
 	if Input.is_action_just_pressed("p1_up"):
 		index = (index - 1 + items.size()) % items.size()
 		_update_visuals()

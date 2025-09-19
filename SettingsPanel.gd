@@ -1,34 +1,48 @@
 extends Control
 
 signal back_requested
+signal points_to_win_changed(value: int)
 
 @onready var rows: Array[HBoxContainer] = [
 	$VBox/MasterRow,
 	$VBox/MusicRow,
-	$VBox/SfxRow
+	$VBox/SfxRow,
+	$VBox/PointsRow
 ]
 
 @onready var master_slider: HSlider = $VBox/MasterRow/Slider
 @onready var music_slider:  HSlider = $VBox/MusicRow/Slider
 @onready var sfx_slider:    HSlider = $VBox/SfxRow/Slider
+@onready var points_slider: HSlider = $VBox/PointsRow/Slider
 
 @onready var master_name: Label = $VBox/MasterRow/Name
 @onready var music_name:  Label = $VBox/MusicRow/Name
 @onready var sfx_name:    Label = $VBox/SfxRow/Name
+@onready var points_name: Label = $VBox/PointsRow/Name
 
 @onready var master_value: Label = $VBox/MasterRow/Value
 @onready var music_value:  Label = $VBox/MusicRow/Value
 @onready var sfx_value:    Label = $VBox/SfxRow/Value
+@onready var points_value: Label = $VBox/PointsRow/Value
 
 var index: int = 0
+var _points_to_win: int = 5
 
 func _ready() -> void:
 	visible = false
 	_init_from_buses()
-	# Connect with typed lambdas or small wrappers to keep types clean
+	# hook up sliders
 	master_slider.value_changed.connect(func(v: float) -> void: _apply_bus("Master", v))
 	music_slider.value_changed.connect(func(v: float) -> void: _apply_bus("Music", v))
 	sfx_slider.value_changed.connect(func(v: float) -> void: _apply_bus("SFX", v))
+	points_slider.value_changed.connect(func(v: float) -> void:
+		_points_to_win = int(v)
+		points_value.text = str(_points_to_win)
+		points_to_win_changed.emit(_points_to_win)
+	)
+	# initial UI
+	points_slider.value = _points_to_win
+	points_value.text = str(_points_to_win)
 	_update_visuals()
 
 func open() -> void:
@@ -37,6 +51,12 @@ func open() -> void:
 
 func close() -> void:
 	visible = false
+
+# allow Main.gd to push its current value into the panel
+func set_points_to_win(v: int) -> void:
+	_points_to_win = clampi(v, 1, 10)
+	points_slider.value = _points_to_win
+	points_value.text = str(_points_to_win)
 
 func _unhandled_input(_event: InputEvent) -> void:
 	if not visible:
@@ -48,9 +68,9 @@ func _unhandled_input(_event: InputEvent) -> void:
 		index = (index + 1) % rows.size()
 		_update_visuals()
 	elif Input.is_action_pressed("p1_left"):
-		_nudge(-2.0)
+		_nudge(-1.0)
 	elif Input.is_action_pressed("p1_right"):
-		_nudge(2.0)
+		_nudge(1.0)
 	elif Input.is_action_just_pressed("back"):
 		back_requested.emit()
 
@@ -87,7 +107,7 @@ func _update_value_labels() -> void:
 	sfx_value.text    = str(int(sfx_slider.value)) + "%"
 
 func _update_visuals() -> void:
-	var names: Array[Label] = [master_name, music_name, sfx_name]
+	var names: Array[Label] = [master_name, music_name, sfx_name, points_name]
 	for i in names.size():
 		var selected: bool = (i == index)
 		var lbl: Label = names[i]

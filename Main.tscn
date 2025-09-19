@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://o7xgpnv1h1ck"]
+[gd_scene load_steps=25 format=3 uid="uid://o7xgpnv1h1ck"]
 
 [ext_resource type="Script" uid="uid://ditlv007yl2cn" path="res://Main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dglv4lmt5rol8" path="res://Ball.gd" id="2_cm0pq"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://cgavlk1ncdjim" path="res://Grass-Placeholder.jpg" id="10_wkp8b"]
 [ext_resource type="AudioStream" uid="uid://sbi4ar2ajb3y" path="res://select.wav" id="11_20pc6"]
 [ext_resource type="AudioStream" uid="uid://ckqm1520xteed" path="res://background-placeholder.mp3" id="11_c6i3y"]
+[ext_resource type="Script" uid="uid://nfkkfmq0qhun" path="res://EndScreen.gd" id="11_j4qnp"]
 [ext_resource type="AudioStream" uid="uid://cgxhkxsw078e3" path="res://cheer-placeholder.wav" id="13_c6i3y"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3dxm6"]
@@ -190,9 +191,9 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 124.0
+offset_left = 125.0
 offset_top = 125.0
-offset_right = -124.0
+offset_right = -123.0
 offset_bottom = -123.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -220,6 +221,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MasterRow"]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "100%"
 
@@ -238,6 +240,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/MusicRow"]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "100%"
 
@@ -257,8 +260,60 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 
 [node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/SfxRow"]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "100%"
+
+[node name="PointsRow" type="HBoxContainer" parent="CanvasLayer/SettingsPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Name" type="Label" parent="CanvasLayer/SettingsPanel/VBox/PointsRow"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Points to win"
+
+[node name="Slider" type="HSlider" parent="CanvasLayer/SettingsPanel/VBox/PointsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 1.0
+max_value = 10.0
+value = 5.0
+
+[node name="Value" type="Label" parent="CanvasLayer/SettingsPanel/VBox/PointsRow"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "   5"
+
+[node name="EndScreen" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 125.0
+offset_top = 209.0
+offset_right = 645.0
+offset_bottom = 509.0
+script = ExtResource("11_j4qnp")
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/EndScreen"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Winner" type="Label" parent="CanvasLayer/EndScreen/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 48
+
+[node name="Hint" type="Label" parent="CanvasLayer/EndScreen/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "Press Confirm to return to menu"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -100
