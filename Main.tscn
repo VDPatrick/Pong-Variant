@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://o7xgpnv1h1ck"]
+[gd_scene load_steps=20 format=3 uid="uid://o7xgpnv1h1ck"]
 
 [ext_resource type="Script" uid="uid://ditlv007yl2cn" path="res://Main.gd" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://dglv4lmt5rol8" path="res://Ball.gd" id="2_cm0pq"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bgb2mxn057v0t" path="res://Wall1-Placeholder.png" id="7_trn2v"]
 [ext_resource type="Texture2D" uid="uid://d2aldougbakob" path="res://Goal-Placeholder.png" id="8_trn2v"]
 [ext_resource type="Script" uid="uid://rbfrn4ie5yqf" path="res://Menu.gd" id="9_03owx"]
+[ext_resource type="Texture2D" uid="uid://cgavlk1ncdjim" path="res://Grass-Placeholder.jpg" id="10_wkp8b"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3dxm6"]
 radius = 8.0
@@ -176,3 +177,9 @@ text = "Options"
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Play Video"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -100
+texture_filter = 1
+position = Vector2(384, 384)
+texture = ExtResource("10_wkp8b")
