@@ -1,0 +1,99 @@
+[gd_scene load_steps=11 format=3 uid="uid://o7xgpnv1h1ck"]
+
+[ext_resource type="Script" uid="uid://ditlv007yl2cn" path="res://Main.gd" id="1_r0du0"]
+[ext_resource type="Script" uid="uid://dglv4lmt5rol8" path="res://Ball.gd" id="2_cm0pq"]
+[ext_resource type="Script" uid="uid://cxyo8p00nqdhv" path="res://Paddle.gd" id="3_fos0i"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3dxm6"]
+radius = 8.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lgr22"]
+size = Vector2(16, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trn2v"]
+size = Vector2(16, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_03owx"]
+size = Vector2(768, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wkp8b"]
+size = Vector2(768, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_20pc6"]
+size = Vector2(32, 768)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5vvyt"]
+size = Vector2(32, 768)
+
+[node name="Main" type="Node2D"]
+position = Vector2(384, 0)
+script = ExtResource("1_r0du0")
+
+[node name="Ball" type="CharacterBody2D" parent="."]
+script = ExtResource("2_cm0pq")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+position = Vector2(0, 384)
+shape = SubResource("CircleShape2D_3dxm6")
+
+[node name="PaddleLeft" type="CharacterBody2D" parent="."]
+position = Vector2(-16, 0)
+script = ExtResource("3_fos0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="PaddleLeft"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PaddleLeft"]
+position = Vector2(-325, 384)
+shape = SubResource("RectangleShape2D_lgr22")
+
+[node name="PaddleRight" type="CharacterBody2D" parent="."]
+script = ExtResource("3_fos0i")
+up_action = &"p2_up"
+down_action = &"p2_down"
+
+[node name="Sprite2D" type="Sprite2D" parent="PaddleRight"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PaddleRight"]
+position = Vector2(341, 384)
+shape = SubResource("RectangleShape2D_trn2v")
+
+[node name="WallTop" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_03owx")
+
+[node name="WallBottom" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallBottom"]
+position = Vector2(0, 760)
+shape = SubResource("RectangleShape2D_wkp8b")
+
+[node name="GoalLeft" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalLeft"]
+position = Vector2(-384, 384)
+shape = SubResource("RectangleShape2D_20pc6")
+
+[node name="GoalRight" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalRight"]
+position = Vector2(384, 384)
+shape = SubResource("RectangleShape2D_5vvyt")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Score" type="HBoxContainer" parent="CanvasLayer"]
+offset_left = 364.0
+offset_top = 25.0
+offset_right = 404.0
+offset_bottom = 65.0
+alignment = 1
+
+[node name="Left" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 2
+
+[node name="Right" type="Label" parent="CanvasLayer/Score"]
+layout_mode = 2
